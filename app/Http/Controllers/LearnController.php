@@ -4,127 +4,148 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Lesson;
-use App\Models\UserProgress;
 use App\Models\UserNote;
 use Illuminate\Http\Request;
 
 class LearnController extends Controller
 {
-    public function show($courseSlug, $lessonSlug)
+    public function show(Course $course, Lesson $lesson)
     {
-        $course = Course::where('slug', $courseSlug)
-            ->with(['modules.lessons'])
-            ->firstOrFail();
-
-        // Check if user enrolled
+        // Check if user is enrolled
         if (!auth()->user()->hasEnrolled($course)) {
-            return redirect()->route('courses.show', $courseSlug)
-                ->with('error', 'Anda harus mendaftar terlebih dahulu.');
+            return redirect()->route('courses.show', $course->slug)
+                ->with('error', 'Anda harus mendaftar terlebih dahulu untuk mengakses materi ini.');
         }
 
-        $currentLesson = Lesson::where('slug', $lessonSlug)
-            ->with(['module', 'references', 'attachments'])
-            ->firstOrFail();
+        // Load relationships
+        $course->load([
+            'modules.lessons' => function ($query) {
+                $query->orderBy('order');
+            }
+        ]);
 
-        // Update last accessed lesson
-        auth()->user()->enrollments()
-            ->where('course_id', $course->id)
-            ->update(['last_accessed_lesson_id' => $currentLesson->id]);
-
-        // Get user progress
-        $userProgress = $currentLesson->getProgressFor(auth()->user());
-
-        // Get user notes
-        $notes = auth()->user()->notes()
-            ->where('lesson_id', $currentLesson->id)
-            ->latest()
-            ->get();
-
-        // Calculate progress percentage
+        // Get enrollment
         $enrollment = auth()->user()->enrollments()
             ->where('course_id', $course->id)
             ->first();
-        $progressPercentage = $enrollment->progress_percentage ?? 0;
 
-        // Get discussions
-        $discussions = $currentLesson->discussions()
-            ->with(['user', 'replies.user'])
-            ->latest()
+        // Update last accessed lesson
+        $enrollment->update([
+            'last_accessed_lesson_id' => $lesson->id
+        ]);
+
+        // Get user progress for current lesson
+        $userProgress = $lesson->userProgress()
+            ->where('user_id', auth()->id())
+            ->first();
+
+        // Get user notes for current lesson
+        $notes = UserNote::where('user_id', auth()->id())
+            ->where('lesson_id', $lesson->id)
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('learn.show', compact(
-            'course',
-            'currentLesson',
-            'userProgress',
-            'notes',
-            'progressPercentage',
-            'discussions'
-        ));
+        // Get discussions for current lesson
+        $discussions = \App\Models\Discussion::with(['user', 'replies'])
+            ->where('lesson_id', $lesson->id)
+            ->latest()
+            ->limit(5) // Show last 5 discussions in sidebar
+            ->get();
+
+        return view('learn.show', [
+            'course' => $course,
+            'currentLesson' => $lesson,
+            'enrollment' => $enrollment,
+            'userProgress' => $userProgress,
+            'notes' => $notes,
+            'discussions' => $discussions // ADD THIS
+        ]);
     }
 
     public function updateProgress(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'lesson_id' => 'required|exists:lessons,id',
-            'is_completed' => 'boolean',
-            'last_position' => 'nullable|integer',
+            'is_completed' => 'required|boolean',
+            'last_position' => 'nullable|integer'
         ]);
 
-        $progress = UserProgress::updateOrCreate(
+        $lesson = Lesson::findOrFail($request->lesson_id);
+        $course = $lesson->module->course;
+
+        // Check enrollment
+        if (!auth()->user()->hasEnrolled($course)) {
+            return response()->json(['success' => false, 'message' => 'Not enrolled'], 403);
+        }
+
+        // Update or create progress
+        $progress = $lesson->userProgress()->updateOrCreate(
+            ['user_id' => auth()->id()],
             [
-                'user_id' => auth()->id(),
-                'lesson_id' => $validated['lesson_id'],
-            ],
-            [
-                'is_completed' => $validated['is_completed'] ?? false,
-                'completed_at' => ($validated['is_completed'] ?? false) ? now() : null,
-                'last_position' => $validated['last_position'] ?? 0,
+                'is_completed' => $request->is_completed,
+                'last_position' => $request->last_position ?? 0,
+                'completed_at' => $request->is_completed ? now() : null
             ]
         );
 
-        // Update enrollment progress
-        $lesson = Lesson::find($validated['lesson_id']);
-        $course = $lesson->module->course;
-
-        $totalLessons = $course->lessons()->count();
-        $completedLessons = UserProgress::where('user_id', auth()->id())
-            ->whereIn('lesson_id', $course->lessons()->pluck('id'))
-            ->where('is_completed', true)
-            ->count();
-
-        $percentage = ($completedLessons / $totalLessons) * 100;
-
+        // Recalculate course progress percentage
         $enrollment = auth()->user()->enrollments()
             ->where('course_id', $course->id)
             ->first();
 
-        $enrollment->update([
-            'progress_percentage' => $percentage,
-            'completed_at' => $percentage == 100 ? now() : null,
-        ]);
+        if ($enrollment) {
+            $totalLessons = $course->lessons()->count();
+            $completedLessons = \App\Models\UserProgress::where('user_id', auth()->id())
+                ->where('is_completed', true)
+                ->whereHas('lesson.module', function ($query) use ($course) {
+                    $query->where('course_id', $course->id);
+                })
+                ->count();
 
-        // Log activity
-        if ($validated['is_completed'] ?? false) {
-            auth()->user()->activities()->create([
-                'activity_type' => 'lesson_completed',
-                'activity_data' => json_encode(['lesson_id' => $validated['lesson_id']]),
+            $progressPercentage = $totalLessons > 0 ? ($completedLessons / $totalLessons) * 100 : 0;
+
+            $enrollment->update([
+                'progress_percentage' => $progressPercentage,
+                'completed_at' => $progressPercentage >= 100 ? now() : null
             ]);
+
+            // Log activity if completed
+            if ($request->is_completed) {
+                \App\Models\UserActivity::create([
+                    'user_id' => auth()->id(),
+                    'type' => 'lesson_completed',
+                    'data' => [
+                        'lesson_id' => $lesson->id,
+                        'lesson_title' => $lesson->title,
+                        'course_id' => $course->id,
+                        'course_title' => $course->title
+                    ]
+                ]);
+            }
         }
 
-        return response()->json(['success' => true, 'progress' => $percentage]);
+        return response()->json(['success' => true, 'progress' => $progress]);
     }
 
     public function saveNote(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'lesson_id' => 'required|exists:lessons,id',
-            'note' => 'required|string|max:2000',
+            'note' => 'required|string'
         ]);
+
+        $lesson = Lesson::findOrFail($request->lesson_id);
+        $course = $lesson->module->course;
+
+        // Check enrollment
+        if (!auth()->user()->hasEnrolled($course)) {
+            return response()->json(['success' => false, 'message' => 'Not enrolled'], 403);
+        }
 
         $note = UserNote::create([
             'user_id' => auth()->id(),
-            'lesson_id' => $validated['lesson_id'],
-            'note' => $validated['note'],
+            'lesson_id' => $request->lesson_id,
+            'note' => $request->note
         ]);
 
         return response()->json(['success' => true, 'note' => $note]);

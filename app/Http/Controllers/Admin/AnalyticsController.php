@@ -37,11 +37,16 @@ class AnalyticsController extends Controller
             ? ($completedEnrollments / $totalEnrollments) * 100
             : 0;
 
+        $breadcrumbs = [
+            ['label' => 'Analitik', 'url' => route('admin.analytics.index')]
+        ];
+
         return view('admin.analytics.index', compact(
             'popularCourses',
             'userActivity',
             'recentEnrollments',
-            'completionRate'
+            'completionRate',
+            'breadcrumbs'
         ));
     }
 

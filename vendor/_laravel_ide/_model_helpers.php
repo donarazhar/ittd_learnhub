@@ -352,8 +352,22 @@ namespace App\Models {
     /**
      * App\Models\CourseReview
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $review
+     * @property integer $rating
+     * @property mixed $user_id
+     * @property mixed $course_id
+     * @property int $id
      * @property-read \App\Models\Course $course
      * @property-read \App\Models\User $user
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereCourseId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereRating($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereReview($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<CourseReview>|CourseReview query()
@@ -657,10 +671,28 @@ namespace App\Models {
     /**
      * App\Models\Discussion
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property integer $replies_count
+     * @property boolean $is_pinned
+     * @property string $content
+     * @property string $title
+     * @property mixed $user_id
+     * @property mixed $lesson_id
+     * @property int $id
      * @property-read \App\Models\Lesson $lesson
      * @property-read \App\Models\User $user
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DiscussionReply> $replies
      * @property-read int|null $replies_count
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereLessonId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereContent($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereIsPinned($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereRepliesCount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion query()
@@ -965,8 +997,20 @@ namespace App\Models {
     /**
      * App\Models\DiscussionReply
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $content
+     * @property mixed $user_id
+     * @property mixed $discussion_id
+     * @property int $id
      * @property-read \App\Models\Discussion $discussion
      * @property-read \App\Models\User $user
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereDiscussionId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereContent($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<DiscussionReply>|DiscussionReply query()
@@ -1270,9 +1314,23 @@ namespace App\Models {
     /**
      * App\Models\Enrollment
      *
+     * @property mixed $last_accessed_lesson_id
+     * @property float $progress_percentage
+     * @property \Illuminate\Support\Carbon|null $completed_at
+     * @property \Illuminate\Support\Carbon $enrolled_at
+     * @property mixed $course_id
+     * @property mixed $user_id
+     * @property int $id
      * @property-read \App\Models\User $user
      * @property-read \App\Models\Course $course
      * @property-read \App\Models\Lesson $lastAccessedLesson
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereCourseId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereEnrolledAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereCompletedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereProgressPercentage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment whereLastAccessedLessonId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Enrollment>|Enrollment query()
@@ -1912,8 +1970,22 @@ namespace App\Models {
     /**
      * App\Models\LessonAttachment
      *
+     * @property string $created_at
+     * @property mixed $file_size
+     * @property string $file_type
+     * @property string $file_path
+     * @property string $file_name
+     * @property mixed $lesson_id
+     * @property int $id
      * @property-read mixed $formatted_size
      * @property-read \App\Models\Lesson $lesson
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereLessonId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereFileName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereFilePath($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereFileType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereFileSize($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<LessonAttachment>|LessonAttachment query()
@@ -2217,7 +2289,21 @@ namespace App\Models {
     /**
      * App\Models\LessonReference
      *
+     * @property string $created_at
+     * @property mixed $order
+     * @property mixed $type
+     * @property string $url
+     * @property string $title
+     * @property mixed $lesson_id
+     * @property int $id
      * @property-read \App\Models\Lesson $lesson
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereLessonId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereUrl($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereOrder($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<LessonReference>|LessonReference query()
@@ -2521,9 +2607,23 @@ namespace App\Models {
     /**
      * App\Models\Module
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $order
+     * @property string|null $description
+     * @property string $title
+     * @property mixed $course_id
+     * @property int $id
      * @property-read \App\Models\Course $course
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson> $lessons
      * @property-read int|null $lessons_count
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereCourseId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereDescription($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereOrder($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Module>|Module query()
@@ -3174,7 +3274,17 @@ namespace App\Models {
     /**
      * App\Models\UserActivity
      *
+     * @property \Illuminate\Support\Carbon $created_at
+     * @property array|null $activity_data
+     * @property string $activity_type
+     * @property mixed $user_id
+     * @property int $id
      * @property-read \App\Models\User $user
+     * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity whereActivityType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity whereActivityData($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserActivity>|UserActivity query()
@@ -3478,8 +3588,20 @@ namespace App\Models {
     /**
      * App\Models\UserNote
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $note
+     * @property mixed $lesson_id
+     * @property mixed $user_id
+     * @property int $id
      * @property-read \App\Models\User $user
      * @property-read \App\Models\Lesson $lesson
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereLessonId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereNote($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserNote>|UserNote query()
@@ -3783,8 +3905,24 @@ namespace App\Models {
     /**
      * App\Models\UserProgress
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property integer $last_position
+     * @property \Illuminate\Support\Carbon|null $completed_at
+     * @property boolean $is_completed
+     * @property mixed $lesson_id
+     * @property mixed $user_id
+     * @property int $id
      * @property-read \App\Models\User $user
      * @property-read \App\Models\Lesson $lesson
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereLessonId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereIsCompleted($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereCompletedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereLastPosition($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserProgress>|UserProgress query()

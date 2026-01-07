@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\ForumController;
+use App\Http\Controllers\Admin\ImageUploadController;
 
 Route::prefix('admin')
     ->middleware(['auth'])
@@ -24,6 +26,9 @@ Route::prefix('admin')
             ->name('register');
         Route::post('/register', [RegisterController::class, 'register'])
             ->middleware('admin');
+
+        // TinyMCE Image Upload
+        Route::post('tinymce/upload', [ImageUploadController::class, 'upload'])->name('tinymce.upload');
 
         // Course Management
         Route::resource('courses', CourseController::class);
@@ -43,6 +48,13 @@ Route::prefix('admin')
         Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
         Route::post('lessons/reorder', [LessonController::class, 'reorder'])->name('lessons.reorder');
 
+        // Forum Management
+        Route::get('forum', [ForumController::class, 'index'])->name('forum.index');
+        Route::get('forum/{discussion}', [ForumController::class, 'show'])->name('forum.show');
+        Route::post('forum/{discussion}/toggle-pin', [ForumController::class, 'togglePin'])->name('forum.toggle-pin');
+        Route::delete('forum/{discussion}', [ForumController::class, 'destroy'])->name('forum.destroy');
+        Route::delete('forum/reply/{reply}', [ForumController::class, 'destroyReply'])->name('forum.destroy-reply');
+
         // User Management (Admin Only)
         Route::middleware('admin')->group(function () {
             Route::resource('users', UserController::class);
@@ -52,3 +64,5 @@ Route::prefix('admin')
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('analytics/courses/{course}', [AnalyticsController::class, 'courseDetail'])->name('analytics.course');
     });
+
+    

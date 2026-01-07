@@ -28,13 +28,18 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
+        $breadcrumbs = [
+            ['label' => 'Dashboard', 'url' => route('admin.dashboard')]
+        ];
+
         return view('admin.dashboard', compact(
             'totalCourses',
             'totalUsers',
             'activeCourses',
             'totalEnrollments',
             'popularCourses',
-            'recentEnrollments'
+            'recentEnrollments',
+            'breadcrumbs'
         ));
     }
 }

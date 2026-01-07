@@ -43,15 +43,19 @@
                     <p class="mt-1 text-sm text-gray-500">Masukkan URL video YouTube</p>
                 </div>
 
-                <!-- Content -->
+                <!-- Content with TinyMCE -->
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
                         Konten Materi
                     </label>
-                    <textarea name="content" id="content" rows="15"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono text-sm">{{ old('content', $lesson->content) }}</textarea>
-                    <p class="mt-1 text-sm text-gray-500">Gunakan HTML untuk formatting. Contoh: &lt;h3&gt;Judul&lt;/h3&gt;,
-                        &lt;p&gt;Paragraf&lt;/p&gt;</p>
+                    <textarea name="content" id="content"
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">{{ old('content', $lesson->content) }}</textarea>
+                    <p class="mt-2 text-sm text-gray-500">
+                        <svg class="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Gunakan editor di atas untuk format teks, menambahkan gambar, video, kode, dan konten lainnya.
+                    </p>
                 </div>
 
                 <!-- Submit Buttons -->
@@ -68,4 +72,7 @@
             </form>
         </div>
     </div>
+
+    {{-- TinyMCE Component --}}
+    <x-admin.tinymce id="content" :height="500" />
 @endsection

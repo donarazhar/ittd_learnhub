@@ -17,18 +17,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            CoursesTableSeeder::class,
-            ModulesTableSeeder::class,
-            LessonsTableSeeder::class,
-            LessonAttachmentsTableSeeder::class,
-            LessonReferencesTableSeeder::class,
-            EnrollmentsTableSeeder::class,
-            UserProgressTableSeeder::class,
-            UserNotesTableSeeder::class,
-            DiscussionsTableSeeder::class,
-            DiscussionRepliesTableSeeder::class,
-            CourseReviewsTableSeeder::class,
-            UserActivitiesTableSeeder::class,
+            // CoursesTableSeeder::class,
+            // ModulesTableSeeder::class,
+            // LessonsTableSeeder::class,
+            // LessonAttachmentsTableSeeder::class,
+            // LessonReferencesTableSeeder::class,
+            // EnrollmentsTableSeeder::class,
+            // UserProgressTableSeeder::class,
+            // UserNotesTableSeeder::class,
+            // DiscussionsTableSeeder::class,
+            // DiscussionRepliesTableSeeder::class,
+            // CourseReviewsTableSeeder::class,
+            // UserActivitiesTableSeeder::class,
         ]);
     }
 }

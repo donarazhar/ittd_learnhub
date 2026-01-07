@@ -19,12 +19,20 @@ class CourseController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('admin.courses.index', compact('courses'));
+        $breadcrumbs = [
+            ['label' => 'Kursus', 'url' => route('admin.courses.index')]
+        ];
+
+        return view('admin.courses.index', compact('courses','breadcrumbs'));
     }
 
     public function create()
     {
-        return view('admin.courses.create');
+        $breadcrumbs = [
+            ['label' => 'Kursus', 'url' => route('admin.courses.index')],
+            ['label' => 'Buat Kursus Baru', 'url' => route('admin.courses.create')]
+        ];
+        return view('admin.courses.create', compact('breadcrumbs'));
     }
 
     public function store(Request $request)

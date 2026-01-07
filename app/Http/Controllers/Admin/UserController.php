@@ -11,17 +11,22 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    // Hapus constructor, karena middleware sudah di route
-
     public function index()
     {
         $users = User::latest()->paginate(20);
-        return view('admin.users.index', compact('users'));
+        $breadcrumbs = [
+            ['label' => 'Pengguna', 'url' => route('admin.users.index')]
+        ];
+        return view('admin.users.index', compact('users', 'breadcrumbs'));
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        $breadcrumbs = [
+            ['label' => 'Pengguna', 'url' => route('admin.users.index')],
+            ['label' => 'Tambah Pengguna', 'url' => route('admin.users.create')]
+        ];
+        return view('admin.users.create', compact('breadcrumbs'));
     }
 
     public function store(Request $request)
@@ -31,6 +36,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'employee_id' => 'required|string|max:50|unique:users',
             'role' => 'required|in:admin,kontributor,user',
+            'is_active' => 'boolean',
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
@@ -40,7 +46,7 @@ class UserController extends Controller
             'employee_id' => $validated['employee_id'],
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
-            'is_active' => true,
+            'is_active' => $validated['is_active'] ?? true,
         ]);
 
         return redirect()->route('admin.users.index')
@@ -49,7 +55,12 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $breadcrumbs = [
+            ['label' => 'Pengguna', 'url' => route('admin.users.index')],
+            ['label' => $user->name, 'url' => '#'],
+            ['label' => 'Edit', 'url' => route('admin.users.edit', $user)]
+        ];
+        return view('admin.users.edit', compact('user', 'breadcrumbs'));
     }
 
     public function update(Request $request, User $user)

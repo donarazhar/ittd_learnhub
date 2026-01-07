@@ -1,527 +1,781 @@
-<!-- resources/views/learn/show.blade.php -->
-
 @extends('layouts.app')
 
-@section('title', $currentLesson->title)
+@section('title', $currentLesson->title . ' - ' . $course->title)
+
+@push('styles')
+    <style>
+        /* Hide main navbar and footer */
+        nav.bg-white.shadow-sm,
+        header nav,
+        footer {
+            display: none !important;
+        }
+
+        body {
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Custom navigation bar styling */
+        .custom-nav {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        /* Content wrapper */
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            padding: 2rem;
+            padding-bottom: 120px;
+        }
+
+        /* Main content area */
+        .main-content {
+            min-width: 0;
+        }
+
+        /* Lesson content styling */
+        .lesson-content {
+            line-height: 1.65;
+            color: #4b5563;
+            font-size: 1.0625rem;
+        }
+
+        .lesson-content h1,
+        .lesson-content h2,
+        .lesson-content h3 {
+            font-weight: 700;
+            margin-top: 1.5em;
+            margin-bottom: 0.6em;
+            color: #1f2937;
+            line-height: 1.3;
+        }
+
+        .lesson-content h1 {
+            font-size: 2.25em;
+        }
+
+        .lesson-content h2 {
+            font-size: 1.875em;
+        }
+
+        .lesson-content h3 {
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 0.85em;
+            color: #4b5563;
+            line-height: 1.65;
+        }
+
+        .lesson-content ul,
+        .lesson-content ol {
+            margin: 0.85em 0;
+            padding-left: 2em;
+        }
+
+        .lesson-content li {
+            margin-bottom: 0.4em;
+        }
+
+        .lesson-content a {
+            color: #0053C5;
+            text-decoration: underline;
+        }
+
+        .lesson-content strong {
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .lesson-content code {
+            background-color: #f3f4f6;
+            padding: 0.2em 0.5em;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875em;
+            color: #dc2626;
+        }
+
+        .lesson-content pre {
+            background-color: #1f2937;
+            color: #f3f4f6;
+            padding: 1.25em;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
+        .lesson-content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .sidebar-tab:hover {
+            color: #111827;
+        }
+
+        .sidebar-tab.active {
+            color: #0053C5;
+            border-bottom-color: #0053C5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            transition: width 0.3s ease;
+        }
+
+        .module-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            font-weight: 600;
+            color: #111827;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .module-header:hover {
+            color: #0053C5;
+        }
+
+        .module-header svg {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .module-header.open svg {
+            transform: rotate(90deg);
+        }
+
+        .lesson-list {
+            padding-left: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.625rem 0.75rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.375rem;
+            color: #4b5563;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lesson-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .lesson-item.active {
+            background-color: #dbeafe;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        .lesson-item.completed {
+            color: #059669;
+        }
+
+        .lesson-item .checkmark {
+            color: #059669;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 40;
+        }
+
+        .bottom-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            align-items: center;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-button:hover:not(.disabled) {
+            background-color: #f3f4f6;
+            border-color: #0053C5;
+            color: #0053C5;
+        }
+
+        .nav-button.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .nav-button.nav-right {
+            justify-content: flex-end;
+            justify-self: end;
+        }
+
+        .current-lesson-title {
+            text-align: center;
+            font-weight: 600;
+            color: #111827;
+            font-size: 0.875rem;
+        }
+
+        /* Discussion Styles */
+        .discussion-item {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .discussion-item:hover {
+            border-color: #0053C5;
+            background-color: #f9fafb;
+        }
+    </style>
+@endpush
 
 @section('content')
-    <div class="min-h-screen bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <!-- Breadcrumb -->
-            <nav class="mb-6">
-                <ol class="flex items-center space-x-2 text-sm">
-                    <li><a href="{{ route('courses.index') }}" class="text-gray-500 hover:text-gray-700">Kursus</a></li>
-                    <li><span class="text-gray-400">/</span></li>
-                    <li><a href="{{ route('courses.show', $course->slug) }}"
-                            class="text-gray-500 hover:text-gray-700">{{ Str::limit($course->title, 30) }}</a></li>
-                    <li><span class="text-gray-400">/</span></li>
-                    <li><span class="text-gray-900 font-medium">{{ $currentLesson->title }}</span></li>
-                </ol>
-            </nav>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Main Content (Left) -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Lesson Title -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $currentLesson->title }}</h1>
-                        <p class="text-sm text-gray-500">{{ $currentLesson->module->title }}</p>
+    <!-- Custom Top Navigation -->
+    <div class="custom-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="{{ route('home') }}" class="flex items-center mr-8">
+                    <div class="p-2 bg-gradient-primary rounded-lg">
+                        <img src="{{ asset('img/logo-hitam.png') }}" alt="IT Learning Hub" class="h-12 w-auto">
                     </div>
+                    <span class="ml-2 text-lg font-bold text-dark-700">ITTD Learning Hub</span>
+                </a>
+                <div>
+                    <h1 style="font-size: 1rem; font-weight: 600; color: #111827; margin: 0;">{{ $course->title }}</h1>
+                    <p style="font-size: 0.75rem; color: #6b7280; margin: 0;">{{ $currentLesson->module->title }}</p>
+                </div>
+            </div>
 
-                    <!-- Video Player -->
-                    @if ($currentLesson->video_url)
-                        <div class="bg-white rounded-lg shadow overflow-hidden">
-                            <div class="relative" style="padding-bottom: 56.25%;">
-                                <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full"
-                                    src="{{ str_replace('watch?v=', 'embed/', $currentLesson->video_url) }}?enablejsapi=1&rel=0"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Lesson Content with Scroll Tracking -->
-                    <div class="bg-white rounded-lg shadow p-6" id="lesson-content">
-                        <div class="prose max-w-none">
-                            {!! $currentLesson->content !!}
-                        </div>
-
-                        <!-- References -->
-                        @if ($currentLesson->references->count() > 0)
-                            <div class="mt-8 pt-6 border-t border-gray-200">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Referensi</h3>
-                                <ul class="space-y-2">
-                                    @foreach ($currentLesson->references as $reference)
-                                        <li>
-                                            <a href="{{ $reference->url }}" target="_blank"
-                                                class="flex items-center text-primary-600 hover:text-primary-800">
-                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                </svg>
-                                                {{ $reference->title }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <!-- Attachments -->
-                        @if ($currentLesson->attachments->count() > 0)
-                            <div class="mt-8 pt-6 border-t border-gray-200">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Lampiran</h3>
-                                <div class="space-y-2">
-                                    @foreach ($currentLesson->attachments as $attachment)
-                                        <a href="{{ Storage::url($attachment->file_path) }}" target="_blank"
-                                            class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                                            <svg class="w-6 h-6 text-gray-400 mr-3" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900">{{ $attachment->file_name }}
-                                                </p>
-                                                <p class="text-xs text-gray-500">{{ $attachment->formatted_size }}</p>
-                                            </div>
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Scroll Progress Indicator -->
-                        <div id="scroll-indicator" class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium text-blue-900">Progres Membaca</span>
-                                <span id="scroll-percentage" class="text-sm font-bold text-blue-600">0%</span>
-                            </div>
-                            <div class="w-full bg-blue-200 rounded-full h-2">
-                                <div id="scroll-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                    style="width: 0%"></div>
-                            </div>
-                            <p class="text-xs text-blue-700 mt-2">Scroll ke bawah untuk menyelesaikan materi</p>
-                        </div>
-
-                        <!-- End of content marker -->
-                        <div id="content-end-marker"></div>
+            <div class="flex items-center gap-4">
+                <!-- Mark Complete Button -->
+                @if (!$userProgress || !$userProgress->is_completed)
+                    <button onclick="markAsComplete()"
+                        style="padding: 0.5rem 1rem; background-color: #10b981; color: white; border: none; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                        ✓ Tandai Selesai
+                    </button>
+                @else
+                    <div
+                        style="padding: 0.5rem 1rem; background-color: #d1fae5; color: #047857; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">
+                        ✓ Selesai
                     </div>
+                @endif
 
-                    <!-- Navigation Buttons -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            @php
-                                $prevLesson = null;
-                                $nextLesson = null;
-                                $allLessons = $course->lessons;
-                                $currentIndex = $allLessons->search(function ($lesson) use ($currentLesson) {
-                                    return $lesson->id === $currentLesson->id;
-                                });
+                <a href="{{ route('courses.show', $course->slug) }}"
+                    style="padding: 0.5rem 1rem; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.875rem; cursor: pointer; text-decoration: none;">
+                    Keluar
+                </a>
+            </div>
+        </div>
+    </div>
 
-                                if ($currentIndex > 0) {
-                                    $prevLesson = $allLessons[$currentIndex - 1];
-                                }
-                                if ($currentIndex < $allLessons->count() - 1) {
-                                    $nextLesson = $allLessons[$currentIndex + 1];
-                                }
-                            @endphp
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Video Player (if exists) -->
+            @if ($currentLesson->video_url)
+                <div
+                    style="position: relative; padding-bottom: 56.25%; margin-bottom: 2rem; background: #000; border-radius: 0.5rem; overflow: hidden;">
+                    <div id="player" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                </div>
+            @endif
 
-                            @if ($prevLesson)
-                                <a href="{{ route('learn.show', [$course->slug, $prevLesson->slug]) }}"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                    Sebelumnya
-                                </a>
-                            @else
-                                <div></div>
-                            @endif
+            <!-- Lesson Title -->
+            <h1 style="font-size: 2rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">
+                {{ $currentLesson->title }}
+            </h1>
 
-                            <div class="flex items-center space-x-3">
-                                <div id="completion-status" class="text-sm">
-                                    @if ($userProgress && $userProgress->is_completed)
-                                        <span class="flex items-center text-green-600 font-medium">
-                                            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            Materi Selesai
-                                        </span>
-                                    @else
-                                        <span class="flex items-center text-gray-500 font-medium">
-                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            Belum Selesai
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
+            <!-- Lesson Content -->
+            @if ($currentLesson->content)
+                <div class="lesson-content">
+                    {!! $currentLesson->content !!}
+                </div>
+            @else
+                <p style="color: #6b7280; font-style: italic;">Konten materi belum tersedia.</p>
+            @endif
+        </div>
 
-                            @if ($nextLesson)
-                                <a href="{{ route('learn.show', [$course->slug, $nextLesson->slug]) }}"
-                                    class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition">
-                                    Selanjutnya
-                                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            @else
-                                <div></div>
-                            @endif
-                        </div>
+        <!-- Sidebar with 3 Tabs -->
+        <div class="sidebar">
+            <!-- Tabs Header -->
+            <div class="sidebar-tabs">
+                <div class="sidebar-tab active" onclick="switchTab('contents')">Daftar Isi</div>
+                <div class="sidebar-tab" onclick="switchTab('notes')">Catatan</div>
+                <div class="sidebar-tab" onclick="switchTab('discussions')">💬 Diskusi</div>
+            </div>
+
+            <!-- Tab Content: Contents -->
+            <div id="contents-tab" class="tab-content active">
+                <!-- Progress Bar -->
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-size: 0.875rem; font-weight: 600; color: #111827;">Progress Kursus</span>
+                        <span style="font-size: 0.875rem; font-weight: 600; color: #059669;">
+                            {{ $enrollment ? number_format($enrollment->progress_percentage, 0) : 0 }}%
+                        </span>
                     </div>
-
-                    <!-- Discussions -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Diskusi</h3>
-
-                        <!-- Add Discussion Form -->
-                        <form method="POST" action="{{ route('discussions.store') }}" class="mb-6">
-                            @csrf
-                            <input type="hidden" name="lesson_id" value="{{ $currentLesson->id }}">
-                            <div class="space-y-3">
-                                <input type="text" name="title" placeholder="Judul diskusi..." required
-                                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                <textarea name="content" rows="3" placeholder="Tulis pertanyaan atau diskusi Anda..." required
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
-                                <button type="submit"
-                                    class="px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition">
-                                    Posting Diskusi
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Discussions List -->
-                        <div class="space-y-4">
-                            @forelse($discussions as $discussion)
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-start space-x-3">
-                                        <div
-                                            class="h-10 w-10 rounded-full bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                                            <span class="text-white font-semibold">
-                                                {{ substr($discussion->user->name, 0, 1) }}
-                                            </span>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-1">
-                                                <h4 class="font-semibold text-gray-900">{{ $discussion->title }}</h4>
-                                                <span
-                                                    class="text-xs text-gray-500">{{ $discussion->created_at->diffForHumans() }}</span>
-                                            </div>
-                                            <p class="text-sm text-gray-600 mb-3">{{ $discussion->user->name }}</p>
-                                            <p class="text-gray-700 mb-3">{{ $discussion->content }}</p>
-
-                                            <!-- Replies -->
-                                            @if ($discussion->replies->count() > 0)
-                                                <div class="mt-3 pl-4 border-l-2 border-gray-200 space-y-3">
-                                                    @foreach ($discussion->replies as $reply)
-                                                        <div class="flex items-start space-x-2">
-                                                            <div
-                                                                class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                                                                <span class="text-gray-600 font-semibold text-sm">
-                                                                    {{ substr($reply->user->name, 0, 1) }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="flex-1">
-                                                                <p class="text-sm font-medium text-gray-900">
-                                                                    {{ $reply->user->name }}</p>
-                                                                <p class="text-sm text-gray-700">{{ $reply->content }}</p>
-                                                                <span
-                                                                    class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-
-                                            <!-- Reply Form -->
-                                            <form method="POST" action="{{ route('discussions.reply', $discussion) }}"
-                                                class="mt-3">
-                                                @csrf
-                                                <div class="flex space-x-2">
-                                                    <input type="text" name="content" placeholder="Tulis balasan..."
-                                                        required
-                                                        class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                                    <button type="submit"
-                                                        class="px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 transition">
-                                                        Balas
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <p class="text-center text-gray-500 py-4">Belum ada diskusi. Jadilah yang pertama!</p>
-                            @endforelse
-                        </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"
+                            style="width: {{ $enrollment ? $enrollment->progress_percentage : 0 }}%;"></div>
                     </div>
                 </div>
 
-                <!-- Sidebar (Right) with Accordion -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow sticky top-6" x-data="{ activeTab: 'modules' }">
-                        <!-- Tabs -->
-                        <div class="flex border-b">
-                            <button @click="activeTab = 'modules'"
-                                :class="activeTab === 'modules' ? 'border-b-2 border-primary-500 text-primary-600' :
-                                    'text-gray-600'"
-                                class="flex-1 py-3 px-4 font-medium text-sm">
-                                Daftar Modul
-                            </button>
-                            <button @click="activeTab = 'notes'"
-                                :class="activeTab === 'notes' ? 'border-b-2 border-primary-500 text-primary-600' :
-                                    'text-gray-600'"
-                                class="flex-1 py-3 px-4 font-medium text-sm">
-                                Catatan
-                            </button>
+                <!-- Modules List -->
+                @foreach ($course->modules as $module)
+                    <div class="module-item">
+                        <div class="module-header open" onclick="toggleModule(this)">
+                            <span>{{ $module->title }}</span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
                         </div>
-
-                        <!-- Progress Bar -->
-                        <div class="p-4 border-b">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium text-gray-700">Progress</span>
-                                <span
-                                    class="text-sm font-bold text-primary-600">{{ number_format($progressPercentage, 0) }}%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary-600 h-2 rounded-full transition-all duration-300"
-                                    style="width: {{ $progressPercentage }}%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Modules Tab with Accordion -->
-                        <div x-show="activeTab === 'modules'" class="p-4 max-h-[32rem] overflow-y-auto scrollbar-thin">
-                            @foreach ($course->modules as $index => $module)
-                                <div class="mb-2" x-data="{
-                                    open: {{ $module->lessons->contains('id', $currentLesson->id) ? 'true' : 'false' }}
-                                }">
-                                    <!-- Module Header (Accordion Trigger) -->
-                                    <button @click="open = !open"
-                                        class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition text-left">
-                                        <div class="flex items-center space-x-2 flex-1">
-                                            <svg class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                                                :class="open ? 'rotate-90' : ''" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <h4 class="font-semibold text-gray-800 text-sm">{{ $module->title }}</h4>
-                                        </div>
-                                        <span class="text-xs text-gray-500 ml-2">{{ $module->lessons->count() }}</span>
-                                    </button>
-
-                                    <!-- Module Lessons (Accordion Content) -->
-                                    <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 -translate-y-2"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 -translate-y-2" class="mt-2 ml-2 space-y-1"
-                                        style="{{ $module->lessons->contains('id', $currentLesson->id) ? '' : 'display: none;' }}">
-                                        @foreach ($module->lessons as $lesson)
-                                            <a href="{{ route('learn.show', [$course->slug, $lesson->slug]) }}"
-                                                class="flex items-center p-2 rounded text-sm hover:bg-gray-100 transition
-                                          {{ $currentLesson->id === $lesson->id ? 'bg-primary-50 border-l-2 border-primary-500' : '' }}">
-                                                @if ($lesson->isCompletedBy(auth()->user()))
-                                                    <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
-                                                        fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd"
-                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                @else
-                                                    <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <circle cx="12" cy="12" r="10" stroke-width="2" />
-                                                    </svg>
-                                                @endif
-                                                <span
-                                                    class="{{ $currentLesson->id === $lesson->id ? 'font-semibold text-primary-600' : 'text-gray-700' }}">
-                                                    {{ $lesson->title }}
-                                                </span>
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                </div>
+                        <div class="lesson-list" style="display: block;">
+                            @foreach ($module->lessons as $lesson)
+                                @php
+                                    $lessonProgress = $lesson->getProgressFor(auth()->user());
+                                    $isCompleted = $lessonProgress && $lessonProgress->is_completed;
+                                    $isActive = $lesson->id === $currentLesson->id;
+                                @endphp
+                                <a href="{{ route('learn.show', [$course->slug, $lesson->slug]) }}"
+                                    class="lesson-item {{ $isActive ? 'active' : '' }} {{ $isCompleted ? 'completed' : '' }}"
+                                    style="text-decoration: none;">
+                                    <span>{{ $lesson->title }}</span>
+                                    @if ($isCompleted)
+                                        <svg class="checkmark" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    @endif
+                                </a>
                             @endforeach
                         </div>
-
-                        <!-- Notes Tab -->
-                        <div x-show="activeTab === 'notes'" class="p-4" style="display: none;">
-                            <form id="noteForm" class="mb-4">
-                                @csrf
-                                <input type="hidden" name="lesson_id" value="{{ $currentLesson->id }}">
-                                <textarea name="note" rows="3"
-                                    class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    placeholder="Tulis catatan Anda..."></textarea>
-                                <button type="submit"
-                                    class="mt-2 w-full bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition">
-                                    Simpan Catatan
-                                </button>
-                            </form>
-
-                            <div id="notesList" class="space-y-3 max-h-64 overflow-y-auto scrollbar-thin">
-                                @forelse($notes as $note)
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <p class="text-sm text-gray-700">{{ $note->note }}</p>
-                                        <span
-                                            class="text-xs text-gray-500">{{ $note->created_at->diffForHumans() }}</span>
-                                    </div>
-                                @empty
-                                    <p class="text-sm text-gray-500 text-center py-4">Belum ada catatan.</p>
-                                @endforelse
-                            </div>
-                        </div>
                     </div>
+                @endforeach
+            </div>
+
+            <!-- Tab Content: Notes -->
+            <div id="notes-tab" class="tab-content" x-data="{ showNoteForm: false }">
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.125rem; font-weight: 700; color: #111827; margin: 0;">Catatan Saya</h3>
+                        <button @click="showNoteForm = !showNoteForm"
+                            style="color: #0053C5; font-weight: 500; background: none; border: none; cursor: pointer;">
+                            + Tambah Catatan
+                        </button>
+                    </div>
+
+                    <div x-show="showNoteForm"
+                        style="margin-bottom: 1rem; padding: 1rem; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; display: none;">
+                        <form onsubmit="saveNote(event)">
+                            <textarea id="noteInput" rows="3" placeholder="Tulis catatan Anda..." required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.75rem;"></textarea>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="submit"
+                                    style="padding: 0.5rem 1rem; background-color: #0053C5; color: white; border: none; border-radius: 0.375rem; font-weight: 500; cursor: pointer;">
+                                    Simpan
+                                </button>
+                                <button type="button" @click="showNoteForm = false"
+                                    style="padding: 0.5rem 1rem; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 0.375rem; cursor: pointer;">
+                                    Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="notesList">
+                        @forelse ($notes as $note)
+                            <div
+                                style="padding: 1rem; background-color: #fef9c3; border: 1px solid #fde047; border-radius: 0.375rem; margin-bottom: 0.75rem;">
+                                <p style="color: #111827; white-space: pre-wrap; margin: 0;">{{ $note->note }}</p>
+                                <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem; margin-bottom: 0;">
+                                    {{ $note->created_at->diffForHumans() }}</p>
+                            </div>
+                        @empty
+                            <p style="color: #6b7280; text-align: center; padding: 2rem 0; font-size: 0.875rem;">
+                                Belum ada catatan.
+                            </p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Discussions -->
+            <div id="discussions-tab" class="tab-content" x-data="{ showDiscussionForm: false }">
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.125rem; font-weight: 700; color: #111827; margin: 0;">💬 Diskusi</h3>
+                        <button @click="showDiscussionForm = !showDiscussionForm"
+                            style="color: #0053C5; font-weight: 500; background: none; border: none; cursor: pointer;">
+                            + Buat Diskusi
+                        </button>
+                    </div>
+
+                    <!-- Create Discussion Form -->
+                    <div x-show="showDiscussionForm"
+                        style="margin-bottom: 1rem; padding: 1rem; background-color: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; display: none;">
+                        <form method="POST" action="{{ route('forum.store') }}">
+                            @csrf
+                            <input type="hidden" name="lesson_id" value="{{ $currentLesson->id }}">
+                            <div style="margin-bottom: 0.75rem;">
+                                <input type="text" name="title" placeholder="Judul diskusi..." required
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;">
+                            </div>
+                            <textarea name="content" rows="3" placeholder="Tulis pertanyaan atau topik diskusi..." required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.75rem;"></textarea>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="submit"
+                                    style="padding: 0.5rem 1rem; background-color: #0053C5; color: white; border: none; border-radius: 0.375rem; font-weight: 500; cursor: pointer;">
+                                    Posting
+                                </button>
+                                <button type="button" @click="showDiscussionForm = false"
+                                    style="padding: 0.5rem 1rem; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 0.375rem; cursor: pointer;">
+                                    Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Discussions List -->
+                    <div id="discussionsList">
+                        @forelse ($discussions as $discussion)
+                            <div class="discussion-item">
+                                <h4 style="font-size: 0.9375rem; font-weight: 600; color: #111827; margin: 0 0 0.5rem 0;">
+                                    {{ $discussion->title }}
+                                </h4>
+                                <div
+                                    style="display: flex; align-items: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem;">
+                                    <span>{{ $discussion->user->name }}</span>
+                                    <span style="margin: 0 0.5rem;">•</span>
+                                    <span>{{ $discussion->created_at->diffForHumans() }}</span>
+                                </div>
+                                <p style="font-size: 0.875rem; color: #4b5563; margin: 0 0 0.5rem 0;">
+                                    {{ Str::limit($discussion->content, 100) }}
+                                </p>
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="font-size: 0.75rem; color: #6b7280;">
+                                        💬 {{ $discussion->replies_count }} balasan
+                                    </span>
+                                    <a href="{{ route('forum.show', $discussion) }}"
+                                        style="font-size: 0.75rem; color: #0053C5; font-weight: 500; text-decoration: none;">
+                                        Lihat →
+                                    </a>
+                                </div>
+                            </div>
+                        @empty
+                            <p style="color: #6b7280; text-align: center; padding: 2rem 0; font-size: 0.875rem;">
+                                Belum ada diskusi untuk materi ini.
+                            </p>
+                        @endforelse
+                    </div>
+
+                    <!-- View All Discussions Link -->
+                    @if ($discussions->count() > 0)
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <a href="{{ route('forum.index') }}?course_id={{ $course->id }}"
+                                style="font-size: 0.875rem; color: #0053C5; font-weight: 500; text-decoration: none;">
+                                Lihat Semua Diskusi →
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
-    @push('scripts')
+    <!-- Fixed Bottom Navigation -->
+    @php
+        $allLessons = collect();
+        foreach ($course->modules as $module) {
+            foreach ($module->lessons as $lesson) {
+                $allLessons->push($lesson);
+            }
+        }
+
+        $currentIndex = $allLessons->search(function ($lesson) use ($currentLesson) {
+            return $lesson->id === $currentLesson->id;
+        });
+
+        $previousLesson = $currentIndex > 0 ? $allLessons[$currentIndex - 1] : null;
+        $nextLesson = $currentIndex < $allLessons->count() - 1 ? $allLessons[$currentIndex + 1] : null;
+    @endphp
+
+    <div class="bottom-nav">
+        <div class="bottom-nav-inner">
+            @if ($previousLesson)
+                <a href="{{ route('learn.show', [$course->slug, $previousLesson->slug]) }}" class="nav-button nav-left">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>{{ Str::limit($previousLesson->title, 25) }}</span>
+                </a>
+            @else
+                <div class="nav-button nav-left disabled">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Materi Pertama</span>
+                </div>
+            @endif
+
+            <div class="current-lesson-title">
+                {{ $currentLesson->title }}
+            </div>
+
+            @if ($nextLesson)
+                <a href="{{ route('learn.show', [$course->slug, $nextLesson->slug]) }}" class="nav-button nav-right">
+                    <span>{{ Str::limit($nextLesson->title, 25) }}</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            @else
+                <div class="nav-button nav-right disabled">
+                    <span>Materi Terakhir</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            @endif
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+    @if ($currentLesson->video_url)
+        <script src="https://www.youtube.com/iframe_api"></script>
         <script>
-            // Scroll Tracking untuk Auto Complete
-            (function() {
-                const contentElement = document.getElementById('lesson-content');
-                const scrollIndicator = document.getElementById('scroll-indicator');
-                const scrollBar = document.getElementById('scroll-bar');
-                const scrollPercentage = document.getElementById('scroll-percentage');
-                const completionStatus = document.getElementById('completion-status');
+            let player;
+            let progressInterval;
 
-                let hasScrolledToBottom = false;
-                let scrollThreshold = 90; // 90% dari konten harus dibaca
-
-                // Check if already completed
-                const isCompleted = {{ $userProgress && $userProgress->is_completed ? 'true' : 'false' }};
-
-                if (!isCompleted && scrollIndicator) {
-                    scrollIndicator.classList.remove('hidden');
-
-                    window.addEventListener('scroll', function() {
-                        const windowHeight = window.innerHeight;
-                        const documentHeight = contentElement.scrollHeight;
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        const contentTop = contentElement.offsetTop;
-                        const contentBottom = contentTop + documentHeight;
-
-                        // Calculate scroll percentage within content
-                        const scrolled = scrollTop + windowHeight - contentTop;
-                        const scrollableHeight = documentHeight;
-                        const percentage = Math.min(100, Math.max(0, (scrolled / scrollableHeight) * 100));
-
-                        // Update progress bar
-                        if (scrollBar && scrollPercentage) {
-                            scrollBar.style.width = percentage + '%';
-                            scrollPercentage.textContent = Math.round(percentage) + '%';
-                        }
-
-                        // Auto complete when scrolled past threshold
-                        if (percentage >= scrollThreshold && !hasScrolledToBottom) {
-                            hasScrolledToBottom = true;
-                            markAsComplete();
-                        }
-                    });
-                }
-            })();
-
-            // Mark as complete
-            function markAsComplete() {
-                fetch('{{ route('learn.progress') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        },
-                        body: JSON.stringify({
-                            lesson_id: {{ $currentLesson->id }},
-                            is_completed: true
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Update UI without reload
-                            const completionStatus = document.getElementById('completion-status');
-                            if (completionStatus) {
-                                completionStatus.innerHTML = `
-                    <span class="flex items-center text-green-600 font-medium">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        Materi Selesai
-                    </span>
-                `;
-                            }
-
-                            // Hide scroll indicator
-                            const scrollIndicator = document.getElementById('scroll-indicator');
-                            if (scrollIndicator) {
-                                scrollIndicator.classList.add('hidden');
-                            }
-
-                            // Show success notification
-                            showNotification('Selamat! Anda telah menyelesaikan materi ini.', 'success');
-
-                            // Reload after 2 seconds to update progress
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+            function onYouTubeIframeAPIReady() {
+                const videoId = getYouTubeVideoId('{{ $currentLesson->video_url }}');
+                player = new YT.Player('player', {
+                    videoId: videoId,
+                    playerVars: {
+                        autoplay: 0,
+                        controls: 1,
+                        modestbranding: 1,
+                        rel: 0
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
             }
 
-            // Save notes
-            document.getElementById('noteForm')?.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
+            function onPlayerReady(event) {
+                @if ($userProgress && $userProgress->last_position > 0)
+                    player.seekTo({{ $userProgress->last_position }});
+                @endif
+            }
 
-                const response = await fetch('{{ route('learn.notes') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                    body: formData
-                });
+            function onPlayerStateChange(event) {
+                if (event.data == YT.PlayerState.PLAYING) {
+                    startProgressTracking();
+                } else {
+                    stopProgressTracking();
+                }
+            }
 
-                if (response.ok) {
-                    showNotification('Catatan berhasil disimpan!', 'success');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
+            function startProgressTracking() {
+                progressInterval = setInterval(() => {
+                    const currentTime = Math.floor(player.getCurrentTime());
+                    updateProgress(currentTime, false);
+                }, 5000);
+            }
+
+            function stopProgressTracking() {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                    const currentTime = Math.floor(player.getCurrentTime());
+                    updateProgress(currentTime, false);
+                }
+            }
+
+            function getYouTubeVideoId(url) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : null;
+            }
+
+            window.addEventListener('beforeunload', () => {
+                if (player && player.getCurrentTime) {
+                    const currentTime = Math.floor(player.getCurrentTime());
+                    updateProgress(currentTime, false);
                 }
             });
-
-            // Notification helper
-            function showNotification(message, type = 'success') {
-                const notification = document.createElement('div');
-                notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 ${
-        type === 'success' ? 'bg-green-600' : 'bg-red-600'
-    } text-white font-medium`;
-                notification.textContent = message;
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.style.opacity = '0';
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 3000);
-            }
         </script>
-    @endpush
-@endsection
+    @endif
+
+    <script>
+        function updateProgress(lastPosition, isCompleted) {
+            fetch('{{ route('learn.progress') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        lesson_id: {{ $currentLesson->id }},
+                        is_completed: isCompleted,
+                        last_position: lastPosition
+                    })
+                }).then(response => response.json())
+                .then(data => {
+                    if (isCompleted && data.success) {
+                        location.reload();
+                    }
+                });
+        }
+
+        function markAsComplete() {
+            updateProgress(0, true);
+        }
+
+        function saveNote(event) {
+            event.preventDefault();
+            const noteInput = document.getElementById('noteInput');
+            fetch('{{ route('learn.notes') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        lesson_id: {{ $currentLesson->id }},
+                        note: noteInput.value
+                    })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function toggleModule(element) {
+            element.classList.toggle('open');
+            const lessonList = element.nextElementSibling;
+            if (lessonList.style.display === 'none' || lessonList.style.display === '') {
+                lessonList.style.display = 'block';
+            } else {
+                lessonList.style.display = 'none';
+            }
+        }
+    </script>
+@endpush
