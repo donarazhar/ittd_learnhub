@@ -2,7 +2,7 @@
 
 <nav class="bg-white shadow-sm sticky top-0 z-50" x-data="{ open: false, profileOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-20">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">

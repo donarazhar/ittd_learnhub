@@ -46,8 +46,8 @@ Route::prefix('admin')
         Route::get('lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
         Route::put('lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
-        Route::post('lessons/reorder', [LessonController::class, 'reorder'])->name('lessons.reorder');
-
+        Route::post('modules/{module}/lessons/reorder', [LessonController::class, 'reorder'])->name('lessons.reorder');
+        
         // Forum Management
         Route::get('forum', [ForumController::class, 'index'])->name('forum.index');
         Route::get('forum/{discussion}', [ForumController::class, 'show'])->name('forum.show');
@@ -64,5 +64,3 @@ Route::prefix('admin')
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('analytics/courses/{course}', [AnalyticsController::class, 'courseDetail'])->name('analytics.course');
     });
-
-    

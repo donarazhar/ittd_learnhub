@@ -74,4 +74,13 @@ class Lesson extends Model
             ->where('user_id', $user->id)
             ->first();
     }
+
+    // app/Models/Lesson.php
+    protected static function booted()
+    {
+        static::addGlobalScope('order', function ($builder) {
+            $builder->orderBy('order');
+        });
+    }
+    
 }

@@ -73,19 +73,33 @@ class LessonController extends Controller
             ->with('success', 'Materi berhasil dihapus!');
     }
 
-    public function reorder(Request $request)
+    public function reorder(Request $request, Module $module)
     {
+        // Check authorization
+        if (!auth()->user()->canManageCourse($module->course)) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $request->validate([
             'lessons' => 'required|array',
             'lessons.*.id' => 'required|exists:lessons,id',
             'lessons.*.order' => 'required|integer',
         ]);
 
-        foreach ($request->lessons as $lessonData) {
-            Lesson::where('id', $lessonData['id'])
-                ->update(['order' => $lessonData['order']]);
-        }
+        try {
+            foreach ($request->lessons as $lessonData) {
+                $lesson = Lesson::find($lessonData['id']);
 
-        return response()->json(['success' => true]);
+                // Verify lesson belongs to this module
+                if ($lesson && $lesson->module_id == $module->id) {
+                    $lesson->order = $lessonData['order'];
+                    $lesson->save();
+                }
+            }
+
+            return response()->json(['success' => true, 'message' => 'Urutan berhasil diperbarui']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

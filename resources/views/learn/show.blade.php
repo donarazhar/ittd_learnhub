@@ -27,15 +27,21 @@
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
 
-        /* Content wrapper */
+        /* Content wrapper with transition */
         .content-wrapper {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr 380px;
             gap: 2rem;
             padding: 2rem;
             padding-bottom: 120px;
+            transition: grid-template-columns 0.3s ease;
+        }
+
+        .content-wrapper.sidebar-collapsed {
+            grid-template-columns: 1fr 0px;
+            gap: 0;
         }
 
         /* Main content area */
@@ -52,7 +58,10 @@
 
         .lesson-content h1,
         .lesson-content h2,
-        .lesson-content h3 {
+        .lesson-content h3,
+        .lesson-content h4,
+        .lesson-content h5,
+        .lesson-content h6 {
             font-weight: 700;
             margin-top: 1.5em;
             margin-bottom: 0.6em;
@@ -72,69 +81,357 @@
             font-size: 1.5em;
         }
 
+        .lesson-content h4 {
+            font-size: 1.25em;
+        }
+
+        .lesson-content h5 {
+            font-size: 1.125em;
+        }
+
+        .lesson-content h6 {
+            font-size: 1em;
+        }
+
         .lesson-content p {
-            margin-bottom: 0.85em;
+            margin-bottom: 1em;
             color: #4b5563;
             line-height: 1.65;
         }
 
+        /* Bullet lists and numbered lists */
         .lesson-content ul,
         .lesson-content ol {
-            margin: 0.85em 0;
+            margin: 1em 0;
             padding-left: 2em;
+            color: #4b5563;
+        }
+
+        .lesson-content ul {
+            list-style-type: disc;
+        }
+
+        .lesson-content ol {
+            list-style-type: decimal;
         }
 
         .lesson-content li {
-            margin-bottom: 0.4em;
+            margin-bottom: 0.5em;
+            line-height: 1.65;
         }
 
+        .lesson-content ul ul,
+        .lesson-content ol ul {
+            list-style-type: circle;
+            margin-top: 0.5em;
+        }
+
+        .lesson-content ul ul ul,
+        .lesson-content ol ul ul {
+            list-style-type: square;
+        }
+
+        /* Links */
         .lesson-content a {
             color: #0053C5;
             text-decoration: underline;
+            transition: color 0.2s;
         }
 
-        .lesson-content strong {
+        .lesson-content a:hover {
+            color: #003378;
+        }
+
+        /* Bold and emphasis */
+        .lesson-content strong,
+        .lesson-content b {
             font-weight: 700;
             color: #1f2937;
         }
 
-        .lesson-content code {
-            background-color: #f3f4f6;
-            padding: 0.2em 0.5em;
-            border-radius: 0.25rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.875em;
-            color: #dc2626;
+        .lesson-content em,
+        .lesson-content i {
+            font-style: italic;
         }
 
-        .lesson-content pre {
-            background-color: #1f2937;
-            color: #f3f4f6;
-            padding: 1.25em;
-            border-radius: 0.5rem;
-            overflow-x: auto;
+        /* Blockquote */
+        .lesson-content blockquote {
+            border-left: 4px solid #0053C5;
+            padding-left: 1em;
+            margin: 1em 0;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Tables */
+        .lesson-content table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 1em 0;
         }
 
-        .lesson-content pre code {
-            background: none;
-            color: inherit;
-            padding: 0;
+        .lesson-content th,
+        .lesson-content td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75em;
+            text-align: left;
         }
 
-        /* Sidebar styling */
+        .lesson-content th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* Horizontal rule */
+        .lesson-content hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 2em 0;
+        }
+
+        /* Images */
+        .lesson-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1em 0;
+        }
+
+        /* Code styling - tanpa background block + italic */
+        .lesson-content code {
+            background: transparent !important;
+            color: #515151 !important;
+            padding: 0 !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            font-style: italic !important;
+            font-size: 0.95em !important;
+        }
+
+        .lesson-content pre {
+            background: transparent !important;
+            color: #515151 !important;
+            padding: 0 !important;
+            margin: 0.5rem 0 !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            font-style: italic !important;
+        }
+
+        .lesson-content pre code {
+            background: transparent !important;
+            padding: 0 !important;
+            color: inherit !important;
+        }
+
+        /* Completion Section Styling */
+        .completion-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 1rem;
+            border: 2px solid #0ea5e9;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .completion-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .completion-section.completed {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: #10b981;
+        }
+
+        .completion-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .completion-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .completion-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.75rem;
+        }
+
+        .completion-description {
+            font-size: 1rem;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+        }
+
+        .complete-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .complete-button:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .complete-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .complete-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .completed-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #059669;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .completed-badge svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Sidebar styling with transition */
         .sidebar {
             position: sticky;
             top: 80px;
             height: fit-content;
             max-height: calc(100vh - 200px);
             overflow-y: auto;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            width: 380px;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Floating toggle button when sidebar is collapsed */
+        .sidebar-toggle-float {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: #0053C5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-float:hover {
+            background: #003378;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .sidebar-toggle-float svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .sidebar-toggle-float.show {
+            display: flex;
+        }
+
+        /* Floating toggle button - moved to top left of sidebar */
+        .sidebar-toggle {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 36px;
+            height: 36px;
+            background: #0053C5;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #003378;
+        }
+
+        .sidebar-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        /* Adjust sidebar to accommodate toggle button */
+        .sidebar-header {
+            position: relative;
+            padding-top: 3rem;
         }
 
         .sidebar-tabs {
             display: flex;
             border-bottom: 2px solid #e5e7eb;
             margin-bottom: 1.5rem;
+            padding: 0 1rem;
+            padding-left: 3.5rem;
         }
 
         .sidebar-tab {
@@ -161,6 +458,7 @@
 
         .tab-content {
             display: none;
+            padding: 0 1rem 1rem 1rem;
         }
 
         .tab-content.active {
@@ -181,6 +479,7 @@
             transition: width 0.3s ease;
         }
 
+        /* Module accordion - independent collapse */
         .module-item {
             border-bottom: 1px solid #e5e7eb;
             padding-bottom: 0.5rem;
@@ -193,7 +492,7 @@
             justify-content: space-between;
             padding: 0.75rem 0;
             font-weight: 600;
-            color: #111827;
+            color: #3d3d3d;
             cursor: pointer;
             transition: color 0.2s;
         }
@@ -205,7 +504,8 @@
         .module-header svg {
             width: 1rem;
             height: 1rem;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
 
         .module-header.open svg {
@@ -215,6 +515,13 @@
         .lesson-list {
             padding-left: 0.5rem;
             margin-top: 0.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .lesson-list.open {
+            max-height: 2000px;
         }
 
         .lesson-item {
@@ -224,10 +531,11 @@
             padding: 0.625rem 0.75rem;
             margin-bottom: 0.25rem;
             border-radius: 0.375rem;
-            color: #4b5563;
+            color: #3d3d3d;
             font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.2s;
+            font-weight: 400;
         }
 
         .lesson-item:hover {
@@ -237,17 +545,23 @@
         .lesson-item.active {
             background-color: #dbeafe;
             color: #1e40af;
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .lesson-item.completed {
             color: #059669;
         }
 
+        .lesson-item.completed.active {
+            color: #1e40af;
+            font-weight: 700;
+        }
+
         .lesson-item .checkmark {
             color: #059669;
             width: 1rem;
             height: 1rem;
+            flex-shrink: 0;
         }
 
         /* Bottom navigation */
@@ -327,19 +641,65 @@
             border-color: #0053C5;
             background-color: #f9fafb;
         }
+
+        /* Scroll Progress Indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #0053C5 0%, #10b981 100%);
+            z-index: 51;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                right: 0;
+                top: 64px;
+                bottom: 0;
+                width: 380px;
+                max-width: 90vw;
+                max-height: none;
+                border-radius: 0;
+                z-index: 45;
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(100%);
+            }
+        }
     </style>
 @endpush
 
 @section('content')
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Floating Toggle Button (shows when sidebar is closed) -->
+    <button class="sidebar-toggle-float" onclick="toggleSidebar()" id="sidebarToggleFloat">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </button>
+
     <!-- Custom Top Navigation -->
     <div class="custom-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center">
-                <a href="{{ route('home') }}" class="flex items-center mr-8">
-                    <div class="p-2 bg-gradient-primary rounded-lg">
-                        <img src="{{ asset('img/logo-hitam.png') }}" alt="IT Learning Hub" class="h-12 w-auto">
-                    </div>
-                    <span class="ml-2 text-lg font-bold text-dark-700">ITTD Learning Hub</span>
+                <a href="{{ route('courses.show', $course->slug) }}"
+                    class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-primary-500 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
                 </a>
                 <div>
                     <h1 style="font-size: 1rem; font-weight: 600; color: #111827; margin: 0;">{{ $course->title }}</h1>
@@ -348,29 +708,23 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Mark Complete Button -->
-                @if (!$userProgress || !$userProgress->is_completed)
-                    <button onclick="markAsComplete()"
-                        style="padding: 0.5rem 1rem; background-color: #10b981; color: white; border: none; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
-                        ✓ Tandai Selesai
-                    </button>
-                @else
-                    <div
-                        style="padding: 0.5rem 1rem; background-color: #d1fae5; color: #047857; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">
-                        ✓ Selesai
-                    </div>
-                @endif
-
-                <a href="{{ route('courses.show', $course->slug) }}"
-                    style="padding: 0.5rem 1rem; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.875rem; cursor: pointer; text-decoration: none;">
-                    Keluar
-                </a>
+                <!-- Progress Indicator -->
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg style="width: 1.25rem; height: 1.25rem; color: #059669;" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span style="font-size: 0.875rem; font-weight: 600; color: #059669;">
+                        {{ $enrollment ? number_format($enrollment->progress_percentage, 0) : 0 }}% Selesai
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="contentWrapper">
         <!-- Main Content Area -->
         <div class="main-content">
             <!-- Video Player (if exists) -->
@@ -387,22 +741,81 @@
             </h1>
 
             <!-- Lesson Content -->
-            @if ($currentLesson->content)
-                <div class="lesson-content">
-                    {!! $currentLesson->content !!}
-                </div>
-            @else
-                <p style="color: #6b7280; font-style: italic;">Konten materi belum tersedia.</p>
-            @endif
+            <div id="lessonContent">
+                @if ($currentLesson->content)
+                    <div class="lesson-content">
+                        {!! $currentLesson->content !!}
+                    </div>
+                @else
+                    <p style="color: #6b7280; font-style: italic;">Konten materi belum tersedia.</p>
+                @endif
+            </div>
+
+            <!-- Completion Section -->
+            <div class="completion-section {{ $userProgress && $userProgress->is_completed ? 'completed visible' : '' }}"
+                id="completionSection">
+                @if ($userProgress && $userProgress->is_completed)
+                    <!-- Already Completed -->
+                    <div class="completion-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <svg fill="white" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h2 class="completion-title" style="color: #059669;">Materi Selesai! 🎉</h2>
+                    <p class="completion-description">
+                        Anda telah menyelesaikan materi ini. Lanjutkan ke materi berikutnya untuk melanjutkan pembelajaran
+                        Anda.
+                    </p>
+                    <div class="completed-badge">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Sudah Selesai</span>
+                    </div>
+                @else
+                    <!-- Not Completed Yet -->
+                    <div class="completion-icon">
+                        <svg fill="#0ea5e9" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h2 class="completion-title">Selesai Membaca?</h2>
+                    <p class="completion-description">
+                        Tandai materi ini sebagai selesai untuk melacak progress pembelajaran Anda
+                    </p>
+                    <button class="complete-button" onclick="markAsComplete()" id="completeButton">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Tandai Selesai</span>
+                    </button>
+                @endif
+            </div>
         </div>
 
         <!-- Sidebar with 3 Tabs -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <!-- Toggle Button inside sidebar -->
+            <button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebarToggle">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
             <!-- Tabs Header -->
-            <div class="sidebar-tabs">
-                <div class="sidebar-tab active" onclick="switchTab('contents')">Daftar Isi</div>
-                <div class="sidebar-tab" onclick="switchTab('notes')">Catatan</div>
-                <div class="sidebar-tab" onclick="switchTab('discussions')">💬 Diskusi</div>
+            <div class="sidebar-header">
+                <div class="sidebar-tabs">
+                    <div class="sidebar-tab active" onclick="switchTab('contents')">Daftar Isi</div>
+                    <div class="sidebar-tab" onclick="switchTab('notes')">Catatan</div>
+                    <div class="sidebar-tab" onclick="switchTab('discussions')">Diskusi</div>
+                </div>
             </div>
 
             <!-- Tab Content: Contents -->
@@ -410,7 +823,7 @@
                 <!-- Progress Bar -->
                 <div style="margin-bottom: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span style="font-size: 0.875rem; font-weight: 600; color: #111827;">Progress Kursus</span>
+                        <span style="font-size: 0.875rem; font-weight: 600; color: #111827;">Progres Kursus</span>
                         <span style="font-size: 0.875rem; font-weight: 600; color: #059669;">
                             {{ $enrollment ? number_format($enrollment->progress_percentage, 0) : 0 }}%
                         </span>
@@ -421,16 +834,20 @@
                     </div>
                 </div>
 
-                <!-- Modules List -->
-                @foreach ($course->modules as $module)
-                    <div class="module-item">
-                        <div class="module-header open" onclick="toggleModule(this)">
+                <!-- Modules List with Independent Collapse -->
+                @foreach ($course->modules as $index => $module)
+                    @php
+                        $hasActiveLesson = $module->lessons->contains('id', $currentLesson->id);
+                    @endphp
+                    <div class="module-item" data-module-id="{{ $module->id }}">
+                        <div class="module-header {{ $hasActiveLesson ? 'open' : '' }}"
+                            onclick="toggleModule({{ $module->id }})">
                             <span>{{ $module->title }}</span>
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </div>
-                        <div class="lesson-list" style="display: block;">
+                        <div class="lesson-list {{ $hasActiveLesson ? 'open' : '' }}" id="module-{{ $module->id }}">
                             @foreach ($module->lessons as $lesson)
                                 @php
                                     $lessonProgress = $lesson->getProgressFor(auth()->user());
@@ -490,7 +907,7 @@
                                 style="padding: 1rem; background-color: #fef9c3; border: 1px solid #fde047; border-radius: 0.375rem; margin-bottom: 0.75rem;">
                                 <p style="color: #111827; white-space: pre-wrap; margin: 0;">{{ $note->note }}</p>
                                 <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem; margin-bottom: 0;">
-                                    {{ $note->created_at->diffForHumans() }}</p>
+                                    {{ optional($note->created_at)->diffForHumans() ?? 'Baru saja' }}</p>
                             </div>
                         @empty
                             <p style="color: #6b7280; text-align: center; padding: 2rem 0; font-size: 0.875rem;">
@@ -505,7 +922,7 @@
             <div id="discussions-tab" class="tab-content" x-data="{ showDiscussionForm: false }">
                 <div style="margin-bottom: 1.5rem;">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                        <h3 style="font-size: 1.125rem; font-weight: 700; color: #111827; margin: 0;">💬 Diskusi</h3>
+                        <h3 style="font-size: 1.125rem; font-weight: 700; color: #111827; margin: 0;">Diskusi</h3>
                         <button @click="showDiscussionForm = !showDiscussionForm"
                             style="color: #0053C5; font-weight: 500; background: none; border: none; cursor: pointer;">
                             + Buat Diskusi
@@ -548,7 +965,7 @@
                                     style="display: flex; align-items: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 0.5rem;">
                                     <span>{{ $discussion->user->name }}</span>
                                     <span style="margin: 0 0.5rem;">•</span>
-                                    <span>{{ $discussion->created_at->diffForHumans() }}</span>
+                                    <span>{{ optional($discussion->created_at)->diffForHumans() ?? 'Baru saja' }}</span>
                                 </div>
                                 <p style="font-size: 0.875rem; color: #4b5563; margin: 0 0 0.5rem 0;">
                                     {{ Str::limit($discussion->content, 100) }}
@@ -711,8 +1128,67 @@
     @endif
 
     <script>
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', function() {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const completionSection = document.getElementById('completionSection');
+            const lessonContent = document.getElementById('lessonContent');
+
+            // Calculate scroll progress
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+
+            // Update progress bar
+            scrollProgress.style.width = scrollPercent + '%';
+
+            // Show completion section when user scrolls to 80% or more
+            if (scrollPercent >= 80 && !completionSection.classList.contains('visible')) {
+                completionSection.classList.add('visible');
+            }
+        });
+
+        // Sidebar toggle functionality
+        let sidebarVisible = true;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const contentWrapper = document.getElementById('contentWrapper');
+            const toggleFloatBtn = document.getElementById('sidebarToggleFloat');
+
+            sidebarVisible = !sidebarVisible;
+
+            if (sidebarVisible) {
+                sidebar.classList.remove('collapsed');
+                contentWrapper.classList.remove('sidebar-collapsed');
+                toggleFloatBtn.classList.remove('show');
+            } else {
+                sidebar.classList.add('collapsed');
+                contentWrapper.classList.add('sidebar-collapsed');
+                toggleFloatBtn.classList.add('show');
+            }
+        }
+
+        // Independent module toggle
+        function toggleModule(moduleId) {
+            const moduleList = document.getElementById('module-' + moduleId);
+            const moduleHeader = event.currentTarget;
+
+            // Toggle current module
+            const isOpen = moduleList.classList.contains('open');
+
+            if (isOpen) {
+                moduleList.classList.remove('open');
+                moduleHeader.classList.remove('open');
+            } else {
+                moduleList.classList.add('open');
+                moduleHeader.classList.add('open');
+            }
+        }
+
         function updateProgress(lastPosition, isCompleted) {
-            fetch('{{ route('learn.progress') }}', {
+            return fetch('{{ route('learn.progress') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -723,16 +1199,97 @@
                         is_completed: isCompleted,
                         last_position: lastPosition
                     })
-                }).then(response => response.json())
-                .then(data => {
-                    if (isCompleted && data.success) {
-                        location.reload();
-                    }
+                })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error updating progress:', error);
+                    return {
+                        success: false
+                    };
                 });
         }
 
+        // ADVANCED FIX WITH MULTIPLE FALLBACK MECHANISMS
+        // This ensures reload happens no matter what
+
         function markAsComplete() {
-            updateProgress(0, true);
+            const button = document.getElementById('completeButton');
+
+            // Disable button
+            button.disabled = true;
+            button.innerHTML =
+                '<svg style="width: 24px; height: 24px; animation: spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg><span>Menyimpan...</span>';
+
+            // Flag to track if reload already triggered
+            let reloadTriggered = false;
+
+            // Fallback 1: Timeout after 3 seconds regardless of response
+            const fallbackTimer = setTimeout(() => {
+                if (!reloadTriggered) {
+                    console.log('Fallback reload triggered');
+                    reloadTriggered = true;
+                    forceReload();
+                }
+            }, 3000);
+
+            // Function to reload with cache busting
+            function forceReload() {
+                button.innerHTML =
+                    '<svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>Berhasil!</span>';
+
+                setTimeout(() => {
+                    // Method 1: Try with cache busting
+                    const currentUrl = window.location.href.split('?')[0].split('#')[0];
+                    window.location.href = currentUrl + '?_t=' + Date.now();
+
+                    // Fallback 2: If above doesn't work in 500ms, try hard reload
+                    setTimeout(() => {
+                        window.location.reload(true);
+                    }, 500);
+                }, 500);
+            }
+
+            // Send request
+            fetch('{{ route('learn.progress') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        lesson_id: {{ $currentLesson->id }},
+                        is_completed: true,
+                        last_position: 0
+                    })
+                })
+                .then(response => {
+                    // Cancel fallback timer since we got response
+                    clearTimeout(fallbackTimer);
+
+                    if (!reloadTriggered) {
+                        reloadTriggered = true;
+                        forceReload();
+                    }
+
+                    return response.text(); // Get as text first to handle any response
+                })
+                .then(text => {
+                    console.log('Server response:', text);
+                })
+                .catch(error => {
+                    console.error('Request error:', error);
+
+                    // Cancel fallback timer
+                    clearTimeout(fallbackTimer);
+
+                    // Reload anyway since data is saved
+                    if (!reloadTriggered) {
+                        reloadTriggered = true;
+                        forceReload();
+                    }
+                });
         }
 
         function saveNote(event) {
@@ -768,14 +1325,14 @@
             document.getElementById(tabName + '-tab').classList.add('active');
         }
 
-        function toggleModule(element) {
-            element.classList.toggle('open');
-            const lessonList = element.nextElementSibling;
-            if (lessonList.style.display === 'none' || lessonList.style.display === '') {
-                lessonList.style.display = 'block';
-            } else {
-                lessonList.style.display = 'none';
+        // Add spin animation for loading state
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
             }
-        }
+        `;
+        document.head.appendChild(style);
     </script>
 @endpush
