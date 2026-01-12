@@ -31,6 +31,8 @@ namespace App\Models {
      * @property-read int|null $enrolledUsers_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CourseReview> $reviews
      * @property-read int|null $reviews_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+     * @property-read int|null $activities_count
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course whereCreatedBy($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course whereTitle($value)

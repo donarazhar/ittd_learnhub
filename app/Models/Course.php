@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
 
 class Course extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, LogsActivity;
 
     protected $fillable = [
         'created_by',
@@ -40,6 +41,59 @@ class Course extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+
+    /**
+     * Attributes to log for activity.
+     */
+    protected function getLogAttributes(): array
+    {
+        return [
+            'title',
+            'slug',
+            'category_id',
+            'level',
+            'is_published',
+            'is_featured',
+        ];
+    }
+
+    /**
+     * Custom activity description.
+     */
+    protected function getActivityDescription(string $eventName): string
+    {
+        $userName = auth()->user()?->name ?? 'System';
+
+        return match ($eventName) {
+            'created' => "{$userName} membuat course baru: {$this->title}",
+            'updated' => "{$userName} mengupdate course: {$this->title}",
+            'deleted' => "{$userName} menghapus course: {$this->title}",
+            default => "{$userName} melakukan {$eventName} pada course: {$this->title}",
+        };
+    }
+
+    /**
+     * Log custom activity - Publish course.
+     */
+    public function logPublish(): void
+    {
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($this)
+            ->log(auth()->user()->name . " mempublikasikan course: {$this->title}");
+    }
+
+    /**
+     * Log custom activity - Unpublish course.
+     */
+    public function logUnpublish(): void
+    {
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($this)
+            ->log(auth()->user()->name . " membatalkan publikasi course: {$this->title}");
     }
 
     // Relationships

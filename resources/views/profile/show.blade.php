@@ -31,7 +31,7 @@
             <!-- Profile Header -->
             <div class="flex items-center mb-8 pb-8 border-b border-gray-200">
                 <div
-                    class="h-20 w-20 rounded-full bg-gradient-primary flex items-center justify-center text-white text-3xl font-bold">
+                    class="h-20 w-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold">
                     {{ substr(auth()->user()->name, 0, 1) }}
                 </div>
                 <div class="ml-6">
