@@ -2931,6 +2931,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
      * @property boolean $is_active
+     * @property string|null $google_id
      * @property string|null $employee_id
      * @property string|null $avatar
      * @property string $password
@@ -2967,6 +2968,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereAvatar($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmployeeId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereGoogleId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereIsActive($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
