@@ -198,31 +198,77 @@
             margin: 1em 0;
         }
 
-        /* Code styling - tanpa background block + italic */
-        .lesson-content code {
-            background: transparent !important;
-            color: #515151 !important;
-            padding: 0 !important;
-            font-family: 'Courier New', Courier, monospace !important;
-            font-style: italic !important;
-            font-size: 0.95em !important;
+        /* Code Block Styles - Cream Theme */
+        .lesson-content pre,
+        .lesson-content pre[class*="language-"] {
+            position: relative;
+            background-color: #faf8f3 !important;
+            color: #2d2d2d !important;
+            border: 1px solid #e8e4dc !important;
+            border-radius: 0.5rem;
+            padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+            padding-right: 5.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            font-style: normal !important;
         }
 
-        .lesson-content pre {
-            background: transparent !important;
-            color: #515151 !important;
-            padding: 0 !important;
-            margin: 0.5rem 0 !important;
-            white-space: pre-wrap !important;
-            word-wrap: break-word !important;
-            font-family: 'Courier New', Courier, monospace !important;
-            font-style: italic !important;
-        }
-
+        .lesson-content code,
         .lesson-content pre code {
-            background: transparent !important;
+            background-color: transparent !important;
+            color: #2d2d2d !important;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
             padding: 0 !important;
-            color: inherit !important;
+            border-radius: 0 !important;
+            display: block;
+            font-style: normal !important;
+        }
+
+        /* Inline code */
+        .lesson-content p code,
+        .lesson-content li code,
+        .lesson-content h1 code,
+        .lesson-content h2 code,
+        .lesson-content h3 code {
+            background-color: #fff4e6 !important;
+            color: #d97706 !important;
+            padding: 0.2rem 0.4rem !important;
+            border-radius: 0.25rem !important;
+            font-size: 0.875em !important;
+            display: inline !important;
+            font-style: normal !important;
+            border: 1px solid #fed7aa !important;
+        }
+
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #2d2d2d;
+            border: 1px solid #2d2d2d;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .copy-button:hover {
+            background: #1a1a1a;
+            border-color: #1a1a1a;
+        }
+
+        .copy-button.copied {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
         }
 
         /* Completion Section Styling */
@@ -655,7 +701,7 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @@media (max-width: 1024px) {
             .content-wrapper {
                 grid-template-columns: 1fr;
             }
@@ -1327,12 +1373,40 @@
 
         // Add spin animation for loading state
         const style = document.createElement('style');
-        style.textContent = `
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-        `;
+        style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
         document.head.appendChild(style);
+
+        // Code Block Enhancement for Lesson Content
+        document.addEventListener('DOMContentLoaded', function() {
+            const lessonContent = document.querySelector('.lesson-content');
+            if (!lessonContent) return;
+
+            lessonContent.querySelectorAll('pre').forEach(block => {
+                if (block.querySelector('.copy-button')) return;
+
+                const code = block.querySelector('code') || block;
+                const text = code.textContent || code.innerText;
+
+                const button = document.createElement('button');
+                button.className = 'copy-button';
+                button.textContent = 'Copy';
+                button.onclick = async function() {
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        button.textContent = 'Copied!';
+                        button.classList.add('copied');
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                            button.classList.remove('copied');
+                        }, 2000);
+                    } catch (e) {
+                        console.error('Copy failed:', e);
+                    }
+                };
+
+                block.style.position = 'relative';
+                block.appendChild(button);
+            });
+        });
     </script>
 @endpush

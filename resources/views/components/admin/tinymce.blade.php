@@ -27,72 +27,141 @@
             selector: '#{{ $id }}',
             height: {{ $height }},
             menubar: true,
-            branding: false, // Remove "Powered by TinyMCE"
-            promotion: false, // Remove premium features promotion
+            branding: false,
+            promotion: false,
+
+            // Plugins
             plugins: [
                 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                 'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                 'insertdatetime', 'media', 'table', 'help', 'wordcount', 'codesample'
             ],
+
+            // Toolbar
             toolbar: 'undo redo | blocks fontsize | ' +
                 'bold italic underline strikethrough | forecolor backcolor | ' +
                 'alignleft aligncenter alignright alignjustify | ' +
                 'bullist numlist outdent indent | removeformat | ' +
                 'link image media table codesample | code fullscreen | help',
+
+            // Code Sample Languages
+            codesample_languages: [{
+                    text: 'HTML/XML',
+                    value: 'markup'
+                },
+                {
+                    text: 'JavaScript',
+                    value: 'javascript'
+                },
+                {
+                    text: 'CSS',
+                    value: 'css'
+                },
+                {
+                    text: 'PHP',
+                    value: 'php'
+                },
+                {
+                    text: 'Python',
+                    value: 'python'
+                },
+                {
+                    text: 'Java',
+                    value: 'java'
+                },
+                {
+                    text: 'C',
+                    value: 'c'
+                },
+                {
+                    text: 'C++',
+                    value: 'cpp'
+                },
+                {
+                    text: 'C#',
+                    value: 'csharp'
+                },
+                {
+                    text: 'SQL',
+                    value: 'sql'
+                },
+                {
+                    text: 'Ruby',
+                    value: 'ruby'
+                },
+                {
+                    text: 'Go',
+                    value: 'go'
+                },
+                {
+                    text: 'Rust',
+                    value: 'rust'
+                },
+                {
+                    text: 'TypeScript',
+                    value: 'typescript'
+                },
+                {
+                    text: 'Bash',
+                    value: 'bash'
+                },
+            ],
+
+            // Content Style
             content_style: `
-            body { 
-                font-family: 'Inter', Helvetica, Arial, sans-serif; 
-                font-size: 14px; 
-                line-height: 1.6; 
-                color: #3d3d3d;
-                padding: 10px;
-            }
-            h1, h2, h3, h4, h5, h6 {
-                color: #3d3d3d;
-                font-weight: 700;
-                margin-top: 1em;
-                margin-bottom: 0.5em;
-            }
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            h3 { font-size: 1.25em; }
-            p { margin-bottom: 1em; }
-            a { color: #0053C5; text-decoration: underline; }
-            pre, code {
-                background: #f7f7f7;
-                border: 1px solid #e3e3e3;
-                border-radius: 4px;
-                padding: 2px 6px;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 0.95em;
-            }
-            pre {
-                padding: 10px;
-                overflow-x: auto;
-            }
-            blockquote {
-                border-left: 4px solid #0053C5;
-                padding-left: 1em;
-                margin-left: 0;
-                color: #666666;
-            }
-            img {
-                max-width: 100%;
-                height: auto;
-            }
-            table {
-                border-collapse: collapse;
-                width: 100%;
-            }
-            table td, table th {
-                border: 1px solid #ddd;
-                padding: 8px;
-            }
-            table th {
-                background-color: #f7f7f7;
-                font-weight: bold;
-            }
-        `,
+                body { 
+                    font-family: 'Inter', Helvetica, Arial, sans-serif; 
+                    font-size: 14px; 
+                    line-height: 1.6; 
+                    color: #3d3d3d;
+                    padding: 10px;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    color: #3d3d3d;
+                    font-weight: 700;
+                    margin-top: 1em;
+                    margin-bottom: 0.5em;
+                }
+                h1 { font-size: 2em; }
+                h2 { font-size: 1.5em; }
+                h3 { font-size: 1.25em; }
+                p { margin-bottom: 1em; }
+                a { color: #0053C5; text-decoration: underline; }
+                pre, code {
+                    background: #f7f7f7;
+                    border: 1px solid #e3e3e3;
+                    border-radius: 4px;
+                    padding: 2px 6px;
+                    font-family: 'Courier New', Courier, monospace;
+                    font-size: 0.95em;
+                }
+                pre {
+                    padding: 10px;
+                    overflow-x: auto;
+                }
+                blockquote {
+                    border-left: 4px solid #0053C5;
+                    padding-left: 1em;
+                    margin-left: 0;
+                    color: #666666;
+                }
+                img {
+                    max-width: 100%;
+                    height: auto;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                table td, table th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+                table th {
+                    background-color: #f7f7f7;
+                    font-weight: bold;
+                }
+            `,
 
             // Image Upload Handler
             images_upload_handler: function(blobInfo, success, failure, progress) {
@@ -154,53 +223,6 @@
             // Additional styling
             content_css: [
                 '//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-            ],
-
-            // Code sample language list
-            codesample_languages: [{
-                    text: 'HTML/XML',
-                    value: 'markup'
-                },
-                {
-                    text: 'JavaScript',
-                    value: 'javascript'
-                },
-                {
-                    text: 'CSS',
-                    value: 'css'
-                },
-                {
-                    text: 'PHP',
-                    value: 'php'
-                },
-                {
-                    text: 'Python',
-                    value: 'python'
-                },
-                {
-                    text: 'Java',
-                    value: 'java'
-                },
-                {
-                    text: 'C',
-                    value: 'c'
-                },
-                {
-                    text: 'C++',
-                    value: 'cpp'
-                },
-                {
-                    text: 'C#',
-                    value: 'csharp'
-                },
-                {
-                    text: 'SQL',
-                    value: 'sql'
-                },
-                {
-                    text: 'Bash',
-                    value: 'bash'
-                },
             ],
 
             // Custom styles
