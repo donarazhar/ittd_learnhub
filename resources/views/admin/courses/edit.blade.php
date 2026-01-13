@@ -1,4 +1,3 @@
-{{-- resources/views/admin/courses/edit.blade.php --}}
 
 @extends('layouts.admin')
 
@@ -599,7 +598,7 @@
                                                                 stroke-width="2"
                                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                         </svg>
-                                                        Edit
+                                                        Kelola
                                                     </a>
                                                     <form method="POST"
                                                         action="{{ route('admin.lessons.destroy', $lesson) }}"
@@ -684,10 +683,21 @@
             // Course wizard Alpine component
             function courseWizard() {
                 return {
-                    currentStep: 1,
+                    currentStep: {{ session('current_step', 1) }},
                     showAddModuleForm: false,
                     showAddLessonForm: false,
-                    selectedModule: '',
+                    selectedModule: '{{ session('selected_module', '') }}',
+
+                    init() {
+                        // Log untuk debug
+                        console.log('Initial step:', this.currentStep);
+                        console.log('Initial selected module:', this.selectedModule);
+                        
+                        // Re-initialize Sortable setelah load
+                        this.$nextTick(() => {
+                            initializeSortable();
+                        });
+                    },
 
                     goToStep(step) {
                         this.currentStep = step;

@@ -29,8 +29,11 @@ class LessonController extends Controller
 
         Lesson::create($validated);
 
-        return redirect()->back()
-            ->with('success', 'Materi berhasil ditambahkan!');
+        // Preserve current tab and selected module - stay on lesson tab
+        return redirect()->route('admin.courses.edit', $module->course)
+            ->with('success', 'Materi berhasil ditambahkan!')
+            ->with('current_step', 3)
+            ->with('selected_module', $module->id);
     }
 
     public function edit(Lesson $lesson)
@@ -67,10 +70,15 @@ class LessonController extends Controller
             abort(403);
         }
 
+        $module = $lesson->module;
+        $course = $module->course;
         $lesson->delete();
 
-        return redirect()->back()
-            ->with('success', 'Materi berhasil dihapus!');
+        // Preserve current tab and selected module - stay on lesson tab
+        return redirect()->route('admin.courses.edit', $course)
+            ->with('success', 'Materi berhasil dihapus!')
+            ->with('current_step', 3)
+            ->with('selected_module', $module->id);
     }
 
     public function reorder(Request $request, Module $module)

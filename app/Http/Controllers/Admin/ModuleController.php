@@ -25,8 +25,10 @@ class ModuleController extends Controller
 
         Module::create($validated);
 
-        return redirect()->back()
-            ->with('success', 'Modul berhasil ditambahkan!');
+        // Preserve current tab - stay on module tab
+        return redirect()->route('admin.courses.edit', $course)
+            ->with('success', 'Modul berhasil ditambahkan!')
+            ->with('current_step', 2);
     }
 
     public function update(Request $request, Module $module)
@@ -42,8 +44,10 @@ class ModuleController extends Controller
 
         $module->update($validated);
 
-        return redirect()->back()
-            ->with('success', 'Modul berhasil diperbarui!');
+        // Preserve current tab - stay on module tab
+        return redirect()->route('admin.courses.edit', $module->course)
+            ->with('success', 'Modul berhasil diperbarui!')
+            ->with('current_step', 2);
     }
 
     public function destroy(Module $module)
@@ -52,10 +56,13 @@ class ModuleController extends Controller
             abort(403);
         }
 
+        $course = $module->course;
         $module->delete();
 
-        return redirect()->back()
-            ->with('success', 'Modul berhasil dihapus!');
+        // Preserve current tab - stay on module tab
+        return redirect()->route('admin.courses.edit', $course)
+            ->with('success', 'Modul berhasil dihapus!')
+            ->with('current_step', 2);
     }
 
     public function reorder(Request $request)
