@@ -206,13 +206,13 @@
             color: #2d2d2d !important;
             border: 1px solid #e8e4dc !important;
             border-radius: 0.5rem;
-            padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-            padding-right: 5.5rem;
+            padding: 2rem !important;
+            padding-right: 6rem !important;
             margin: 1.5rem 0;
             overflow-x: auto;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
             font-size: 0.875rem;
-            line-height: 1.7;
+            line-height: 1.8;
             font-style: normal !important;
         }
 
@@ -221,7 +221,6 @@
             background-color: transparent !important;
             color: #2d2d2d !important;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
-            padding: 0 !important;
             border-radius: 0 !important;
             display: block;
             font-style: normal !important;
@@ -243,11 +242,17 @@
             border: 1px solid #fed7aa !important;
         }
 
-        /* Copy Button */
-        .copy-button {
+        /* Copy Button Wrapper - Absolute di pojok kanan atas */
+        .copy-button-wrapper {
             position: absolute;
             top: 0.75rem;
             right: 0.75rem;
+            z-index: 10;
+        }
+
+        /* Copy Button */
+        .copy-button {
+            position: relative;
             background: #2d2d2d;
             border: 1px solid #2d2d2d;
             color: white;
@@ -258,6 +263,7 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: inline-block;
         }
 
         .copy-button:hover {
@@ -1387,6 +1393,10 @@
                 const code = block.querySelector('code') || block;
                 const text = code.textContent || code.innerText;
 
+                // Create wrapper for button positioning
+                const wrapper = document.createElement('div');
+                wrapper.className = 'copy-button-wrapper';
+
                 const button = document.createElement('button');
                 button.className = 'copy-button';
                 button.textContent = 'Copy';
@@ -1404,8 +1414,15 @@
                     }
                 };
 
+                wrapper.appendChild(button);
                 block.style.position = 'relative';
-                block.appendChild(button);
+                block.appendChild(wrapper);
+
+                // Keep button visible on horizontal scroll
+                block.addEventListener('scroll', function() {
+                    const scrollLeft = block.scrollLeft;
+                    wrapper.style.transform = `translateX(${scrollLeft}px)`;
+                });
             });
         });
     </script>
