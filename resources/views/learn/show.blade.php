@@ -315,22 +315,22 @@
         /* Code Blocks */
         .lesson-content pre {
             position: relative;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%) !important;
             color: #e2e8f0 !important;
-            border: 1px solid #334155 !important;
+            border: 1px solid #000000 !important;
             border-radius: 0.75rem;
             padding: 1.5rem !important;
             margin: 1.5rem 0;
             overflow-x: auto;
             font-family: 'JetBrains Mono', monospace !important;
             font-size: 0.875rem;
-            line-height: 1.7;
+            line-height: 1.5;
         }
 
         .lesson-content p code,
         .lesson-content li code {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
-            color: #92400e !important;
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%) !important;
+            color: #ffffff !important;
             padding: 0.2rem 0.5rem !important;
             border-radius: 0.375rem !important;
             font-size: 0.875em !important;
@@ -345,9 +345,8 @@
         }
 
         .copy-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #94a3b8;
+            background: rgb(255, 255, 255);
+            color: #000000;
             padding: 0.5rem 0.875rem;
             border-radius: 0.5rem;
             font-size: 0.75rem;
@@ -359,13 +358,13 @@
         }
 
         .copy-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
         }
 
         .copy-button.copied {
-            background: #10b981;
-            color: white;
+            background: #000000;
+            color: rgb(255, 255, 255);
         }
 
         /* Completion Section - Inline Compact */
@@ -1731,7 +1730,7 @@
                 const button = document.createElement('button');
                 button.className = 'copy-button';
                 button.innerHTML =
-                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy';
+                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>';
                 button.onclick = async function() {
                     try {
                         await navigator.clipboard.writeText(text);
@@ -1740,7 +1739,7 @@
                         button.classList.add('copied');
                         setTimeout(() => {
                             button.innerHTML =
-                                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy';
+                                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>';
                             button.classList.remove('copied');
                         }, 2000);
                     } catch (e) {

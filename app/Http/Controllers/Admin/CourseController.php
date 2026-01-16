@@ -17,7 +17,7 @@ class CourseController extends Controller
                 $query->where('created_by', auth()->id());
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         $breadcrumbs = [
             ['label' => 'Kursus', 'url' => route('admin.courses.index')]
