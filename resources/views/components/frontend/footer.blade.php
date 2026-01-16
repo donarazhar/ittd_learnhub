@@ -12,7 +12,7 @@
                     <span class="ml-3 text-xl font-bold text-white">ITTD Learning Hub</span>
                 </div>
                 <p class="text-sm text-gray-400 mb-4">
-                    Platform pembelajaran internal untuk meningkatkan kompetensi dan skill pegawai IT YPI Al Azhar.
+                    Platform Pembelajaran Internal Untuk Meningkatkan Kompetensi & Skill Pegawai YPI Al Azhar.
                 </p>
                 <p class="text-sm text-gray-500">
                     © {{ date('Y') }} YPI Al Azhar. All rights reserved.
@@ -50,7 +50,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span>ittd@al-azhar.or.id</span>
+                        <span>learnhub@al-azhar.or.id</span>
                     </li>
                     <li class="flex items-start">
                         <svg class="w-5 h-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5" fill="none"
