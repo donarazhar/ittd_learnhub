@@ -50,10 +50,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course query()
-     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course published()
-     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course byLevel(mixed $level)
-     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course findSimilarSlugs(string $attribute, array $config, string $slug)
-     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course published() {@see App\Models\Course::scopePublished()}
+     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course byLevel(mixed $level) {@see App\Models\Course::scopeByLevel()}
+     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course findSimilarSlugs(string $attribute, array $config, string $slug) {@see App\Models\Course::scopeFindSimilarSlugs()}
+     * @method static \Illuminate\Database\Eloquent\Builder<Course>|Course withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug) {@see App\Models\Course::scopeWithUniqueSlugConstraints()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -698,7 +698,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion query()
-     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion pinned()
+     * @method static \Illuminate\Database\Eloquent\Builder<Discussion>|Discussion pinned() {@see App\Models\Discussion::scopePinned()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -1670,8 +1670,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson query()
-     * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson findSimilarSlugs(string $attribute, array $config, string $slug)
-     * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+     * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson findSimilarSlugs(string $attribute, array $config, string $slug) {@see App\Models\Lesson::scopeFindSimilarSlugs()}
+     * @method static \Illuminate\Database\Eloquent\Builder<Lesson>|Lesson withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug) {@see App\Models\Lesson::scopeWithUniqueSlugConstraints()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
