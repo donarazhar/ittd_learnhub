@@ -20,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->environment('production')) {
+        // Force HTTPS untuk semua URL
+        if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
     }
